@@ -48,7 +48,9 @@ class CertValidatingHTTPSConnection(httplib.HTTPConnection):
     default_port = httplib.HTTPS_PORT
 
     def __init__(self, host, port=None, key_file=None, cert_file=None,
-                             ca_certs=None, strict=None, **kwargs):
+                             ca_certs=None, strict=None,
+                             validate_host=True,
+                             **kwargs):
         """Constructor.
         
         Args:
@@ -65,6 +67,7 @@ class CertValidatingHTTPSConnection(httplib.HTTPConnection):
         self.key_file = key_file
         self.cert_file = cert_file
         self.ca_certs = ca_certs
+        self.validate_host = validate_host
         if self.ca_certs:
             self.cert_reqs = ssl.CERT_REQUIRED
         else:
@@ -129,7 +132,7 @@ class CertValidatingHTTPSConnection(httplib.HTTPConnection):
                                           certfile  = self.cert_file,
                                           cert_reqs = self.cert_reqs,
                                           ca_certs  = self.ca_certs)
-        if self.cert_reqs & ssl.CERT_REQUIRED:
+        if self.validate_host and self.cert_reqs & ssl.CERT_REQUIRED:
             addr = self.sock.getpeername()
             cert = self.sock.getpeercert()
             if not self._address_matches(addr, cert):
