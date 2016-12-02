@@ -831,12 +831,10 @@ class HTTPRequest(object):
         
         self.server.gateway(self).respond()
         
-        if (self.ready and not self.sent_headers):
-            self.sent_headers = True
-            self.send_headers()
         if self.chunked_write:
             self.conn.wfile.sendall("0\r\n\r\n")
-    
+
+
     def simple_response(self, status, msg=""):
         """Write a simple response back to the client."""
         status = str(status)
@@ -2160,6 +2158,11 @@ class WSGIGateway(Gateway):
                     if isinstance(chunk, unicodestr):
                         chunk = chunk.encode('ISO-8859-1')
                     self.write(chunk)
+
+            # If the body was empty, we haven't sent the headers yet
+            if not self.req.sent_headers:
+                self.write_headers()
+
         finally:
             if hasattr(response, "close"):
                 response.close()
@@ -2194,6 +2197,10 @@ class WSGIGateway(Gateway):
         
         return self.write
     
+    def write_headers(self):
+        self.req.sent_headers = True
+        self.req.send_headers()
+
     def write(self, chunk):
         """WSGI callable to write unbuffered data to the client.
         
@@ -2217,8 +2224,7 @@ class WSGIGateway(Gateway):
                 chunk = chunk[:rbo]
         
         if not self.req.sent_headers:
-            self.req.sent_headers = True
-            self.req.send_headers()
+            self.write_headers()
         
         self.req.write(chunk)
         
