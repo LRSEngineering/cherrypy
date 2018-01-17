@@ -1,5 +1,6 @@
 MANIFEST.in
 README.txt
+setup.cfg
 setup.py
 CherryPy.egg-info/PKG-INFO
 CherryPy.egg-info/SOURCES.txt
@@ -60,6 +61,7 @@ cherrypy/test/_test_states_demo.py
 cherrypy/test/benchmark.py
 cherrypy/test/checkerdemo.py
 cherrypy/test/helper.py
+cherrypy/test/https_verifier.py
 cherrypy/test/logtest.py
 cherrypy/test/modfastcgi.py
 cherrypy/test/modfcgid.py
@@ -93,6 +95,7 @@ cherrypy/test/test_request_obj.py
 cherrypy/test/test_routes.py
 cherrypy/test/test_session.py
 cherrypy/test/test_sessionauthenticate.py
+cherrypy/test/test_ssl.py
 cherrypy/test/test_states.py
 cherrypy/test/test_static.py
 cherrypy/test/test_tools.py
